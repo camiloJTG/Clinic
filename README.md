@@ -5,4 +5,5 @@ Used tools:
   - Nodejs  
   - Express  
   - Ejs 
-  - mysql 
+  - MySql 
+  - Bootstrap
