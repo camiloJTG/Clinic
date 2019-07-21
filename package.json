@@ -1,0 +1,28 @@
+{
+  "name": "CrudWithNodeJS",
+  "version": "1.0.0",
+  "description": "Create CRUD about a MySql database.",
+  "main": "index.js",
+  "scripts": {
+    "dev": "nodemon src/index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/camiloJTG/CrudWithNodeJS.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/camiloJTG/CrudWithNodeJS/issues"
+  },
+  "homepage": "https://github.com/camiloJTG/CrudWithNodeJS#readme",
+  "dependencies": {
+    "ejs": "^2.6.2",
+    "express": "^4.17.1",
+    "mysql": "^2.17.1"
+  },
+  "devDependencies": {
+    "nodemon": "^1.19.1"
+  }
+}
