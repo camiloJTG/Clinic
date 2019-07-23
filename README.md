@@ -4,6 +4,8 @@ Create CRUD about a MySql database.
 Used tools:   
   - Nodejs  
   - Express  
-  - Ejs 
+  - Handlebars 
   - MySql 
   - Bootstrap
+  - NPM
+  
