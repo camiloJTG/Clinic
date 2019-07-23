@@ -1,0 +1,18 @@
+<div class="container p-4">
+    <div class="row">
+        {{#each data}}
+            <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12">
+                <div class="card border-warning mb-3" style="max-width: 18rem;">
+                    <div class="card-header text-center">{{id_clients}}</div>
+                    <div class="card-body text-center">
+                        <h5 class="card-title text-center text-uppercase"><strong>{{name_clients}}</strong></h5>
+                        <h5 class="card-title text-center text-lowercase"><strong>{{last_name_clients}}</strong></h5>
+                        <a href="/clients/delete/{{id_clients}}" class="btn btn-danger"><i class="fas fa-trash-alt"></i></a>
+                        <a href="#" class="btn btn-primary"><i class="fas fa-edit"></i></a>
+                    </div>
+                </div>
+            </div>
+        {{/each}}
+    </div>
+</div>
+
