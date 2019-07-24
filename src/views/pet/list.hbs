@@ -1,0 +1,31 @@
+<div class="container p-4">
+    <div class="row">
+        <div class="table-responsive">
+            <table class="table table-bordered table-dark">
+                <thead>
+                    <tr class="text-center">
+                        <th scope="col">Código</th>
+                        <th scope="col">Mascota</th>
+                        <th scope="col">Tipo</th>
+                        <th scope="col">Dueño</th>
+                        <th scope="col"></th>
+                        <th scope="col"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {{#each data}}
+                        <tr class="text-center">
+                            <td>{{id_pet}}</td>
+                            <td>{{name_pet}}</td>
+                            <td>{{description_type_animal}}</td>
+                            <td>{{name_clients}}</td>
+                            <td><a href="/pets/delete/{{id_pet}}" class="btn btn-danger"><i class="fas fa-trash-alt"></i></a></td>
+                            <td><a href="/pets/edit/{{id_pet}}" class="btn btn-primary"><i class="fas fa-edit"></i></a></td>
+                        </tr>
+                    {{/each}}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+

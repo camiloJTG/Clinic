@@ -14,6 +14,7 @@ const app = express();
     }));
     app.set('view engine', '.hbs');
 
+
 //middleware
     app.use(express.json());   
     app.use(express.urlencoded({extended : false}));
