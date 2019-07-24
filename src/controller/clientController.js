@@ -53,4 +53,37 @@ clientConstroller.delete = (req,res) =>
     });
 }
 
+clientConstroller.editView = (req, res)=>
+{
+    const {id} = req.params;
+
+    mysqlConnection.query('SELECT * FROM clients WHERE id_clients = ?', [id], (err, result, fields) =>
+    {
+        if(!err)
+        {
+            res.render('client/edit', {data: result[0]});
+        }else 
+        {
+            console.log(err);
+        };
+    });
+};
+
+clientConstroller.edit = (req, res) =>
+{
+    const {id} = req.params;
+    const data = req.body;  
+
+    mysqlConnection.query('UPDATE clients SET ? WHERE id_clients = ?', [data,id], (err, result, fields)=>
+    {
+        if(!err)
+        {
+            res.redirect('/clients/list');
+        }else
+        {
+            console.log(err);
+        };
+    });
+};
+
 module.exports = clientConstroller;

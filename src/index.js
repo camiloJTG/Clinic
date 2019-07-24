@@ -20,6 +20,7 @@ const app = express();
     
 //routes
     app.use('/clients', require('./router/client'));
+    app.use('/pets', require('./router/pet'));
     
 //static fields
     app.use(express.static(path.join(__dirname, 'public')));
