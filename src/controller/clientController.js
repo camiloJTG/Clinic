@@ -40,13 +40,21 @@ clientConstroller.add = (req,res) =>
 clientConstroller.delete = (req,res) =>
 {
     const {id} = req.params; 
-
-    mysqlConnection.query('DELETE FROM clients WHERE id_clients = ?', [id], (err, result, fields) =>
+    mysqlConnection.query('DELETE FROM pet WHERE id_clients = ?', [id], (err,result,fields)=>
     {
         if(!err)
         {
-            res.redirect('/clients/list');
-        }else
+            mysqlConnection.query('DELETE FROM clients WHERE id_clients = ?', [id], (err, result, fields) =>
+            {
+                if(!err)
+                {
+                    res.redirect('/clients/list');
+                }else
+                {
+                    console.log(err);
+                }
+            });
+        }else 
         {
             console.log(err);
         }
