@@ -1,132 +1,86 @@
 const petController = {};
+
 const mysqlConnection = require('../database/mysqlConnection');
 
-petController.addView = (req, res) =>
+petController.addView = async (req, res) =>
 {
-    mysqlConnection.query('SELECT * FROM clients', (err,result,fields)=>
+    try 
     {
-        if(!err)
-        {
-            const clients = result;
-            
-            mysqlConnection.query('SELECT * FROM type_animal', (err,resultA,fields)=>
-            {
-                if(!err)
-                {
-                    const animal = resultA;
-                    res.render('pet/add', {clients,animal});
-                }else 
-                {
-                    console.log(err);
-                }
-            });
-        }else 
-        {
-            console.log(err);
-        }
-    });
+        const clients = await mysqlConnection.query('SELECT * FROM clients');
+        const animal = await mysqlConnection.query('SELECT * FROM type_animal');
+        res.render('pet/add', {clients,animal});
+    } catch (e) 
+    {
+        console.log(e);    
+    }
 }
 
-petController.add = (req, res) =>
+petController.add = async (req, res) =>
 {
-    const data = req.body;
-
-    mysqlConnection.query('INSERT INTO pet SET ?', [data], (err,result,fields)=>
+    try 
     {
-        if(!err)
-        {
-            res.redirect('/pets/list');
-        }else 
-        {
-            console.log(err);
-        };
-    })
+        const data = req.body;
+        await mysqlConnection.query('INSERT INTO pet SET ?', [data]);    
+        res.redirect('/pets/list');
+    } catch (e)
+    {
+        console.log(e);    
+    }
 };
 
-petController.list = (req,res) =>
+petController.list = async (req,res) =>
 {
-    mysqlConnection.query('SELECT * FROM pet p join clients cli on (p.id_clients = cli.id_clients) join type_animal ti on (p.id_type_animal = ti.id_type_animal)', (err, result, fields)=>
+    try 
     {
-        if(!err)
-        {
-            res.render('pet/list', {data: result});
-        }else 
-        {
-            console.log(err);
-        }
-    })
+        const listPet = await mysqlConnection.query('SELECT * FROM pet p join clients cli on (p.id_clients = cli.id_clients) join type_animal ti on (p.id_type_animal = ti.id_type_animal)');    
+        res.render('pet/list', {data: listPet});
+    } catch (e)
+    {
+        console.log(e);    
+    }
 };
 
-petController.delete = (req,res)=>
+petController.delete = async (req,res)=>
 {
-    const {id} = req.params; 
-
-    mysqlConnection.query('DELETE FROM pet WHERE id_pet = ?', [id], (err,result,fields)=>
+    try 
     {
-        if(!err)
-        {
-            res.redirect('/pets/list');
-        }else 
-        {
-            console.log(err);
-        }
-
-    });
+        const {id} = req.params;
+        await mysqlConnection.query('DELETE FROM pet WHERE id_pet = ?', [id]);
+        res.redirect('/pets/list');
+    } catch (e) 
+    {
+        console.log(e);    
+    }
 };
 
-petController.idEdit = (req,res) =>
+petController.idEdit = async (req,res) =>
 {
-    const {id} = req.params; 
-
-    mysqlConnection.query('SELECT * FROM pet p join clients cli on (p.id_clients = cli.id_clients) join type_animal ti on (p.id_type_animal = ti.id_type_animal) WHERE p.id_pet = ?', [id], (err,dataPet,fields)=>
+    try 
     {
-        if(!err)
-        {
-            const pet = dataPet[0];
-            mysqlConnection.query('SELECT * FROM clients', (err, dataClients, fields)=>
-            {
-                if(!err)
-                {
-                    const client = dataClients;
-                    mysqlConnection.query('SELECT * FROM type_animal', (err, dataTypeAnimal, fields)=>
-                    {
-                        if(!err)
-                        {
-                            const animal = dataTypeAnimal;
-                            res.render('pet/edit', {pet,client,animal});
-                        }else
-                        {
-                            console.log(err);
-                        }
-                    });
-                }else 
-                {
-                    console.log(err);
-                }
-            });
-            
-        }else 
-        {
-            console.log(err);
-        };
-    });
+        const {id} = req.params;
+        const petEdit = await mysqlConnection.query('SELECT * FROM pet p join clients cli on (p.id_clients = cli.id_clients) join type_animal ti on (p.id_type_animal = ti.id_type_animal) WHERE p.id_pet = ?', [id]);
+        const client = await mysqlConnection.query('SELECT * FROM clients');
+        const animal = await mysqlConnection.query('SELECT * FROM type_animal');
+        const pet = petEdit[0];
+        res.render('pet/edit', {pet,client,animal});
+    } catch (e) 
+    {
+        console.log(e);
+    }
 }
 
-petController.edit = (req,res)=>
+petController.edit = async (req,res)=>
 {
-    const {id} = req.params;
-    const data = req.body;
-
-    mysqlConnection.query('UPDATE pet SET ? WHERE id_pet = ?', [data,id], (err,result,fields)=>
+    try 
     {
-        if(!err)
-        {
-            res.redirect('/pets/list');
-        }else 
-        {
-            console.log(err);
-        }
-    });
+        const {id} = req.params;
+        const data = req.body;
+        await mysqlConnection.query('UPDATE pet SET ? WHERE id_pet = ?', [data,id]);    
+        res.redirect('/pets/list');
+    } catch (e)
+    {
+        console.log(e);    
+    }
 };
 
 module.exports = petController;

@@ -2,18 +2,16 @@ clientConstroller = {};
 
 const mysqlConnection = require('../database/mysqlConnection');
 
-clientConstroller.list = (req, res) =>
+clientConstroller.list = async (req, res) =>
 {
-    mysqlConnection.query('SELECT * FROM clients', (err,result,fields)=>
+    try 
     {
-        if(!err)
-        {
-            res.render('client/List', {data: result});
-        }else 
-        {
-            console.log(err);
-        };
-    });
+        const data = await mysqlConnection.query('SELECT * FROM clients');
+        res.render('client/List', {data:data});    
+    } catch (e) 
+    {
+        console.log(e);
+    }
 };
 
 clientConstroller.addView = (req, res)=>
@@ -21,78 +19,58 @@ clientConstroller.addView = (req, res)=>
     res.render('client/add');
 }
 
-clientConstroller.add = (req,res) =>
+clientConstroller.add = async (req,res) =>
 {
-    const data = req.body;
-
-    mysqlConnection.query('INSERT INTO clients SET ? ', [data], (err, result, fields)=>
+    try 
     {
-        if(!err)
-        {
-            res.redirect('/clients/list');
-        }else 
-        {
-            console.log(err);
-        };
-    });
+        const data = req.body;
+        const addClient = await mysqlConnection.query('INSERT INTO clients SET ? ', [data]);
+        res.redirect('/clients/list');    
+    } catch (e) 
+    {
+        console.log(e)    
+    }
 };
 
-clientConstroller.delete = (req,res) =>
+clientConstroller.delete = async (req,res) =>
 {
-    const {id} = req.params; 
-    mysqlConnection.query('DELETE FROM pet WHERE id_clients = ?', [id], (err,result,fields)=>
+    try 
     {
-        if(!err)
-        {
-            mysqlConnection.query('DELETE FROM clients WHERE id_clients = ?', [id], (err, result, fields) =>
-            {
-                if(!err)
-                {
-                    res.redirect('/clients/list');
-                }else
-                {
-                    console.log(err);
-                }
-            });
-        }else 
-        {
-            console.log(err);
-        }
-    });
+        const {id} = req.params;
+        await mysqlConnection.query('DELETE FROM pet WHERE id_clients = ?', [id]);
+        await mysqlConnection.query('DELETE FROM clients WHERE id_clients = ?', [id]);
+        res.redirect('/clients/list');
+    } catch (e)
+    {
+        console.log(e);
+    }
 }
 
-clientConstroller.editView = (req, res)=>
+clientConstroller.editView = async (req, res)=>
 {
-    const {id} = req.params;
-
-    mysqlConnection.query('SELECT * FROM clients WHERE id_clients = ?', [id], (err, result, fields) =>
+    try 
     {
-        if(!err)
-        {
-            res.render('client/edit', {data: result[0]});
-        }else 
-        {
-            console.log(err);
-        };
-    });
+        const {id} = req.params;
+        const data = await mysqlConnection.query('SELECT * FROM clients WHERE id_clients = ?', [id]);
+        res.render('client/edit', {data: data[0]});   
+    } catch (e)
+    {
+        console.log(e);
+    }
 };
 
-clientConstroller.edit = (req, res) =>
+clientConstroller.edit = async (req, res) =>
 {
-    const {id} = req.params;
-    const data = req.body;  
-
-    mysqlConnection.query('UPDATE clients SET ? WHERE id_clients = ?', [data,id], (err, result, fields)=>
+    try 
     {
-        if(!err)
-        {
-            res.redirect('/clients/list');
-        }else
-        {
-            console.log(err);
-        };
-    });
+        const {id} = req.params;
+        const data = req.body;  
+        await mysqlConnection.query('UPDATE clients SET ? WHERE id_clients = ?', [data,id]);
+        res.redirect('/clients/list');
+    } catch (e) 
+    {
+        console.log(e);
+    }
 };
-
 
 module.exports = clientConstroller;

@@ -1,18 +1,17 @@
 typeAnimalController = {}; 
+
 const mysqlConnection = require('../database/mysqlConnection');
  
-typeAnimalController.list = (req,res)=>
+typeAnimalController.list = async (req,res)=>
 {
-    mysqlConnection.query('SELECT * FROM type_animal', (err,result,fields)=>
+    try 
     {
-        if(!err)
-        {
-            res.render('typeAnimal/list', {data:result});
-        }else 
-        {
-            console.log(err);
-        }
-    });
+        const dataTypeAnimal = await mysqlConnection.query('SELECT * FROM type_animal');
+        res.render('typeAnimal/list', {data:dataTypeAnimal});
+    } catch (e) 
+    {
+        console.log(e);    
+    }
 };
 
 typeAnimalController.addView = (req,res) =>
@@ -20,78 +19,58 @@ typeAnimalController.addView = (req,res) =>
     res.render('typeAnimal/add');
 };
 
-typeAnimalController.add = (req, res) =>
+typeAnimalController.add = async (req, res) =>
 {
-    const data = req.body;
-    
-    mysqlConnection.query('INSERT INTO type_animal SET ?', [data], (err,result,fields)=>
+    try 
     {
-        if(!err)
-        {
-            res.redirect('/typeAnimal/list');
-        }else 
-        {
-            console.log(err);
-        }
-    });
+        const data = req.body;
+        await mysqlConnection.query('INSERT INTO type_animal SET ?', [data]);
+        res.redirect('/typeAnimal/list');
+    } catch (e) 
+    {
+        console.log(e);    
+    }
 }
 
-typeAnimalController.delete = (req,res) =>
+typeAnimalController.delete = async (req,res) =>
 {
-    const {id} = req.params;
-
-    mysqlConnection.query('DELETE FROM pet WHERE id_type_animal = ?', [id], (err,result,fields)=>
+    try 
     {
-        if(!err)
-        {
-            mysqlConnection.query('DELETE FROM type_animal WHERE id_type_animal = ?', [id], (err,result,fields)=>
-            {
-                if(!err)
-                {
-                    res.redirect('/typeAnimal/list');
-                }else
-                {
-                    console.log(err);
-                };
-            });
-        }else 
-        {
-            console.log(err);
-        };
-    });
+        const {id} = req.params;
+        await mysqlConnection.query('DELETE FROM pet WHERE id_type_animal = ?', [id]);
+        await mysqlConnection.query('DELETE FROM type_animal WHERE id_type_animal = ?', [id]);
+        res.redirect('/typeAnimal/list');
+    } catch (e) 
+    {
+        console.log(e);   
+    }
 };
 
-typeAnimalController.editView = (req,res)=>
+typeAnimalController.editView = async (req,res)=>
 {
-    const {id} = req.params;
-
-    mysqlConnection.query('SELECT * FROM type_animal WHERE id_type_animal = ?', [id], (err,result,fields)=>
+    try 
     {
-        if(!err)
-        {
-            res.render('typeAnimal/edit', {data: result[0]});
-        }else 
-        {
-            console.log(err);
-        }
-    });
+        const {id} = req.params;
+        const editTypeAnimal = await mysqlConnection.query('SELECT * FROM type_animal WHERE id_type_animal = ?', [id]);    
+        res.render('typeAnimal/edit', {data: editTypeAnimal[0]});
+    } catch (e)
+    {
+        console.log(e);    
+    }
 };
 
-typeAnimalController.edit = (req,res)=>
+typeAnimalController.edit = async (req,res)=>
 {
-    const {id} = req.params;
-    const data = req.body;
-
-    mysqlConnection.query('UPDATE type_animal SET ? WHERE id_type_animal = ? ', [data,id], (err,result,fields)=>
+    try 
     {
-        if(!err)
-        {   
-            res.redirect('/typeAnimal/list');
-        }else 
-        {
-            console.log(err);
-        }
-    });
+        const {id} = req.params;
+        const data = req.body;
+        await mysqlConnection.query('UPDATE type_animal SET ? WHERE id_type_animal = ? ', [data,id]);   
+        res.redirect('/typeAnimal/list');     
+    } catch (e) 
+    {
+        console.log(e);    
+    }
 };
 
 module.exports = typeAnimalController;
